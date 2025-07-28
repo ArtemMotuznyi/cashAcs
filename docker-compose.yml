@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    container_name: ktor_app
+    depends_on:
+      - postgres-db
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
+      DATABASE_USER: ktor_user
+      DATABASE_PASSWORD: ktor_password
+      PORT: 8080
+    ports:
+      - "8080:8080"
+
+  postgres-db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ktor_db
+      POSTGRES_USER: ktor_user
+      POSTGRES_PASSWORD: ktor_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:9.1.0
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - postgres-db
+
+volumes:
+  postgres_data:
