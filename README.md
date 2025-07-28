@@ -29,6 +29,31 @@ To build or run the project, use one of the following tasks:
 | `publishImageToLocalRegistry` | Publish the docker image locally                                     |
 | `run`                         | Run the server                                                       |
 | `runDocker`                   | Run using the local docker image                                     |
+| `runFatJar`                   | Builds a combined JAR of project and runtime dependencies and runs it.
+
+### Running with Docker Compose
+
+To run the application using Docker Compose:
+
+1. **Quick start (recommended):**
+   ```bash
+   ./start-docker.sh
+   ```
+
+2. **Manual steps:**
+   ```bash
+   # Build the application
+   ./gradlew buildFatJar
+   
+   # Start with Docker Compose
+   docker compose up --build
+   ```
+
+3. **For development (background mode):**
+   ```bash
+   ./gradlew buildFatJar
+   docker compose up --build -d
+   ```
 
 If the server starts successfully, you'll see the following output:
 
