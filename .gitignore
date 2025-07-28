@@ -34,3 +34,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Backup files
+Dockerfile.old
+Dockerfile.multistage
