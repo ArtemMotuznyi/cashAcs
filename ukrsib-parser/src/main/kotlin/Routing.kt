@@ -12,8 +12,9 @@ import ua.developer.artemmotuznyi.ukrsibparser.ui.generateErrorHtml
 
 fun Application.configureRouting() {
     val authService = AuthService()
-//    val tokenRepository = TokenRepository()
-//    val gmailService = GmailService()
+    // TODO: Implement dependency injection
+    // val tokenRepository = TokenRepository()
+    // val gmailService = GmailService(tokenRepository)
 
     routing {
         get("/") {
@@ -36,33 +37,11 @@ fun Application.configureRouting() {
             val password = parameters["password"] ?: ""
 
             if (authService.validateCredentials(username, password)) {
+                // TODO: Implement proper session management
                 call.respondText("Login successful!")
-            } else {
-                call.respondText("Login failed!", status = HttpStatusCode.Unauthorized)
-            }
-        }
-
-        post("/auth"){
-            val parameters = call.receiveParameters()
-            val username = parameters["username"] ?: ""
-            val password = parameters["password"] ?: ""
-
-            if (authService.validateCredentials(username, password)) {
-//                val authSuccess = gmailService.authenticate()
-
             } else {
                 call.respondRedirect("/auth?error=invalid")
             }
         }
-
-//        post("/login") {
-//            val credentials = call.receive<Credentials>()
-//            val authService = AuthService()
-//            if (authService.authenticate(credentials)) {
-//                call.respondText("Login successful!")
-//            } else {
-//                call.respondText("Login failed!", status = HttpStatusCode.Unauthorized)
-//            }
-//        }
     }
 }

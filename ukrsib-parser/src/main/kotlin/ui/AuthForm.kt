@@ -6,7 +6,8 @@ fun HTML.generateAuthFormHtml(onError: () -> Unit) = this.apply {
     head {
         title("Cash ACS - Authentication")
         style {
-            +"""
+            unsafe {
+                +"""
                         body { font-family: Arial, sans-serif; margin: 40px; }
                         .container { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
                         .form-group { margin-bottom: 15px; }
@@ -16,6 +17,7 @@ fun HTML.generateAuthFormHtml(onError: () -> Unit) = this.apply {
                         button:hover { background-color: #0056b3; }
                         .error { color: red; margin-top: 10px; }
                         """.trimIndent()
+            }
         }
     }
     body {
@@ -44,10 +46,12 @@ fun HTML.generateErrorHtml(error: String) = this.apply {
     head {
         title("Error")
         style {
-            +"""
+            unsafe {
+                +"""
                         body { font-family: Arial, sans-serif; margin: 40px; }
                         .error { color: red; }
                         """.trimIndent()
+            }
         }
     }
     body {
