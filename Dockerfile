@@ -1,5 +1,5 @@
 # Runtime stage: Using JDK 21 slim image
-FROM openjdk:21-slim
+FROM openjdk:22-slim
 
 # Set working directory
 WORKDIR /app

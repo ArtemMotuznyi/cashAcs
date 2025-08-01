@@ -7,7 +7,7 @@ group = "ua.developer.artemmotuznyi"
 version = "0.0.1"
 
 application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+    mainClass = "com.example.ukrsibparser.UkrsibParserApplicationKt"
 }
 
 repositories {
@@ -15,6 +15,9 @@ repositories {
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
+
+    implementation(project(":common:mail-token"))
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
