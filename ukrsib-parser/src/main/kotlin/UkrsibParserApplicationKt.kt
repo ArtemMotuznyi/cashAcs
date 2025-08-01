@@ -25,6 +25,8 @@ fun Application.ukrsibParserModule() {
             // Простий health‑check
             get("status") {
                 call.respondText("ukrsib-parser is up!")
+
+
             }
             // Ендпоінт, який приймає name/email і повертає результат парсингу
             post("parse") {

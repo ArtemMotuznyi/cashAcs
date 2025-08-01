@@ -1,6 +1,6 @@
 secrets:
   admin_credentials:
-    file: ./secrets/admin_credentials.env
+    file: secrets/admin_credentials.json
 
 services:
   app:
@@ -28,6 +28,8 @@ services:
     environment:
       # якщо потрібні креденшали:
       ADMIN_CRED_FILE: /run/secrets/admin_credentials
+      CLIENT_SECRET: /run/secrets/client_secret
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
       PORT: 8081
     ports:
       - "8081:8081"
