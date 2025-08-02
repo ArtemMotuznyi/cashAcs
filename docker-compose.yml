@@ -1,6 +1,10 @@
 secrets:
   admin_credentials:
-    file: secrets/admin_credentials.json
+    file: secrets/admin_credentials.txt
+  client_secret:
+    file: secrets/client_secret.json
+  master_key:
+    file: secrets/master_key.txt
 
 services:
   app:
@@ -8,31 +12,21 @@ services:
     container_name: ktor_app
     depends_on:
       - postgres-db
-    environment:
-      DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
-      DATABASE_USER: ktor_user
-      DATABASE_PASSWORD: ktor_password
-      PORT: 8080
-    ports:
-      - "8080:8080"
-
-  ukrsib-parser:
-    build:
-      context: ./ukrsib-parser
-      dockerfile: Dockerfile
-    container_name: ukrsib_parser
-    depends_on:
-      - postgres-db
     secrets:
       - admin_credentials
+      - client_secret
+      - master_key
     environment:
-      # якщо потрібні креденшали:
+      DATABASE_USER: ktor_user
+      DATABASE_PASSWORD: ktor_password
       ADMIN_CRED_FILE: /run/secrets/admin_credentials
       CLIENT_SECRET: /run/secrets/client_secret
       DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
-      PORT: 8081
+      MAIL_TOKEN_MASTER_KEY: /run/secrets/master_key
+      PORT: 8080
     ports:
-      - "8081:8081"
+      - "8080:8080"
+      - "5005:5005"  # Debug port
 
   postgres-db:
     image: postgres:15

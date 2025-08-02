@@ -1,8 +1,8 @@
-package ua.developer.artemmotuznyi.ukrsibparser.ui
+package ua.developer.artemmotuznyi.ui
 
 import kotlinx.html.*
 
-fun HTML.generateAuthFormHtml(onError: () -> Unit) = this.apply {
+fun HTML.generateAuthFormHtml(error: String? = null) = this.apply {
     head {
         title("Cash ACS - Authentication")
         style {
@@ -15,6 +15,7 @@ fun HTML.generateAuthFormHtml(onError: () -> Unit) = this.apply {
                         button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
                         button:hover { background-color: #0056b3; }
                         .error { color: red; margin-top: 10px; }
+                        .toast-error { color: red; margin-top: 10px; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; }
                         """.trimIndent()
         }
     }
@@ -35,27 +36,15 @@ fun HTML.generateAuthFormHtml(onError: () -> Unit) = this.apply {
                     }
                 }
                 button(type = ButtonType.submit) { +"Login" }
-            }
-        }
-    }
-}
-
-fun HTML.generateErrorHtml(error: String) = this.apply {
-    head {
-        title("Error")
-        style {
-            +"""
-                        body { font-family: Arial, sans-serif; margin: 40px; }
-                        .error { color: red; }
-                        """.trimIndent()
-        }
-    }
-    body {
-        div("error") {
-            +when (error) {
-                "invalid" -> "Invalid username or password"
-                "auth_failed" -> "Gmail authentication failed"
-                else -> "An error occurred"
+                if (error != null) {
+                    div(classes = "toast-error") {
+                        +when (error) {
+                            "invalid" -> "Invalid username or password"
+                            "auth_failed" -> "Gmail authentication failed"
+                            else -> "An error occurred"
+                        }
+                    }
+                }
             }
         }
     }

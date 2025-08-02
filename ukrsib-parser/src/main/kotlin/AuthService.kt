@@ -5,7 +5,7 @@ import java.io.File
 class AuthService {
 
     private val credentialsFile: File
-        get() = File("secrets/admin_credentials")
+        get() = File(System.getenv("ADMIN_CRED_FILE") ?: "credentials.txt")
 
     fun validateCredentials(username: String, password: String): Boolean {
         if (!credentialsFile.exists()) {
