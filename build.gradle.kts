@@ -4,6 +4,10 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 group = "ua.developer.artemmotuznyi"
 version = "0.0.1"
 
@@ -31,4 +35,10 @@ dependencies {
     implementation("io.ktor:ktor-server-call-logging:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-server-content-negotiation:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-serialization-kotlinx-json:${libs.versions.ktor.version.get()}")
+    
+    // Security enhancements
+    implementation("io.ktor:ktor-server-rate-limit:${libs.versions.ktor.version.get()}")
+    implementation("io.ktor:ktor-server-cors:${libs.versions.ktor.version.get()}")
+    implementation("io.ktor:ktor-server-default-headers:${libs.versions.ktor.version.get()}")
+    implementation("io.ktor:ktor-server-hsts:${libs.versions.ktor.version.get()}")
 }

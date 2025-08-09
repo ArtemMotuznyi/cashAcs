@@ -8,8 +8,10 @@ secrets:
 
 services:
   app:
-    build: .
-    container_name: ktor_app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ktor_app_dev
     depends_on:
       - postgres-db
     secrets:
@@ -24,13 +26,12 @@ services:
       DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
       MAIL_TOKEN_MASTER_KEY: /run/secrets/master_key
       PORT: 8080
-      # Production OAuth redirect URI (should be set to actual server domain)
-      OAUTH_REDIRECT_URI: ${OAUTH_REDIRECT_URI:-http://localhost:8080/oauth2callback}
-      # Allowed CORS host for production
-      ALLOWED_HOST: ${ALLOWED_HOST:-localhost:8080}
+      # Development OAuth redirect URI
+      OAUTH_REDIRECT_URI: http://localhost:8080/oauth2callback
+      ALLOWED_HOST: localhost:8080
     ports:
       - "8080:8080"
-    # Remove debug port for production security
+      - "5005:5005"  # Debug port for development
 
   postgres-db:
     image: postgres:15
@@ -38,7 +39,7 @@ services:
     environment:
       POSTGRES_DB: ktor_db
       POSTGRES_USER: ktor_user
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-ktor_password}
+      POSTGRES_PASSWORD: ktor_password
     ports:
       - "5432:5432"
     volumes:
@@ -50,12 +51,10 @@ services:
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     depends_on:
       - postgres-db
-    profiles:
-      - dev  # Only include in development
 
 volumes:
   postgres_data:

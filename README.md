@@ -30,6 +30,33 @@ To build or run the project, use one of the following tasks:
 | `run`                         | Run the server                                                       |
 | `runDocker`                   | Run using the local docker image                                     |
 
+## Security & Production Deployment
+
+⚠️ **IMPORTANT**: This application handles sensitive financial data and OAuth tokens. Please review the security documentation before deployment.
+
+### Quick Security Setup
+1. **Review security documentation**: See [SECURITY.md](SECURITY.md) for detailed security guide
+2. **Run security check**: `./scripts/security-check.sh`
+3. **Hash admin password**: `./scripts/hash-password.sh username password`
+4. **Production deployment**: `docker-compose up -d app postgres-db`
+5. **Development with debug**: `docker-compose -f docker-compose.dev.yml up -d`
+
+### Security Features Implemented
+- 🔐 BCrypt password hashing for admin credentials
+- 🛡️ Rate limiting on authentication endpoints (5 attempts/minute)
+- 🔒 PostgreSQL pgcrypto encryption for OAuth tokens
+- 🌐 Configurable OAuth redirect URIs for server deployment
+- 📡 Security headers (HSTS, CSP, X-Frame-Options, etc.)
+- 🚫 Input validation and sanitization
+- 🏗️ Production Docker configuration without debug ports
+
+### Critical Environment Variables
+```bash
+OAUTH_REDIRECT_URI=https://your-domain.com/oauth2callback
+ALLOWED_HOST=your-domain.com
+DATABASE_PASSWORD=your_strong_password
+```
+
 If the server starts successfully, you'll see the following output:
 
 ```

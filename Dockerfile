@@ -1,5 +1,5 @@
-# Runtime stage: Using JDK 21 slim image
-FROM openjdk:22-slim
+# Production stage: Using JDK 17 slim image (matching build toolchain)
+FROM openjdk:17-slim
 
 # Set working directory
 WORKDIR /app
@@ -7,13 +7,12 @@ WORKDIR /app
 # Copy the pre-built JAR
 COPY build/libs/cashacs-all.jar ./app.jar
 
-# Expose the port that Ktor will use
-# Відкриваємо HTTP-порт і порт для дебагу
-EXPOSE 8080 5005
+# Expose only the application port (no debug port for production)
+EXPOSE 8080
 ENV PORT=8080
 
-# Додаємо JDWP-агент для remote debug
-ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+# Production environment settings
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseStringDeduplication"
 
 # Command to run the application
-CMD ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

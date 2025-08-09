@@ -20,6 +20,9 @@ dependencies {
     // Mail token module
     implementation(project(":common:mail-token"))
 
+    // Security for password hashing
+    implementation("org.springframework.security:spring-security-crypto:6.2.1")
+
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
@@ -27,6 +30,10 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:${libs.versions.ktor.version.get()}")
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
