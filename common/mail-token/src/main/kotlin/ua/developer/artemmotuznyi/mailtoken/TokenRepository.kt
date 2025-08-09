@@ -11,7 +11,15 @@ import java.sql.PreparedStatement
 
 class TokenRepository(private val masterKeyPath: String) {
     private val masterKey: String by lazy {
-        File(masterKeyPath).readText().trim()
+        val keyFile = File(masterKeyPath)
+        if (!keyFile.exists()) {
+            throw IllegalStateException("Master key file not found at: $masterKeyPath")
+        }
+        val key = keyFile.readText().trim()
+        if (key.length < 32) {
+            throw IllegalStateException("Master key must be at least 32 characters long")
+        }
+        key
     }
 
     suspend fun save(userId: String, dto: TokenDTO): Unit = withContext(Dispatchers.IO) {

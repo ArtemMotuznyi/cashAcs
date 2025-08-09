@@ -6,6 +6,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.plugins.ratelimit.*
 import kotlinx.html.body
 import kotlinx.html.h1
 import kotlinx.html.li
@@ -38,30 +39,49 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/auth") {
-            log.info("POST /auth")
-            val params = call.receiveParameters()
-            val username = params["username"].orEmpty()
-            val password = params["password"].orEmpty()
-            log.debug("Received credentials username='{}'", username)
+        rateLimit(RateLimitName("auth")) {
+            post("/auth") {
+                log.info("POST /auth")
+                val params = call.receiveParameters()
+                val username = params["username"]?.trim()?.take(100) // Limit length and sanitize
+                val password = params["password"]?.take(100) // Limit length
+                
+                // Input validation
+                if (username.isNullOrBlank() || password.isNullOrBlank()) {
+                    log.warn("Missing username or password")
+                    call.respondRedirect("/auth?error=invalid")
+                    return@post
+                }
+                
+                // Sanitize username for logging (remove potential injection)
+                val safeUsername = username.replace(Regex("[^a-zA-Z0-9_.-]"), "_")
+                log.debug("Received credentials username='{}'", safeUsername)
 
-            if (!authService.validateCredentials(username, password)) {
-                log.warn("Invalid credentials for user='{}'", username)
-                call.respondRedirect("/auth?error=invalid")
-                return@post
+                if (!authService.validateCredentials(username, password)) {
+                    log.warn("Invalid credentials for user='{}'", safeUsername)
+                    call.respondRedirect("/auth?error=invalid")
+                    return@post
+                }
+
+                val googleUrl = gmailService.getAuthorizationUrl()
+                log.info("Redirecting to Google OAuth")
+                call.respondRedirect(googleUrl)
             }
-
-            val googleUrl = gmailService.getAuthorizationUrl()
-            log.info("Redirecting to Google OAuth: {}", googleUrl)
-            call.respondRedirect(googleUrl)
         }
 
         get("/oauth2callback") {
             log.info("GET /oauth2callback")
-            val code = call.request.queryParameters["code"]
+            val code = call.request.queryParameters["code"]?.trim()?.take(500) // Limit length
             if (code.isNullOrBlank()) {
                 log.error("Missing 'code' parameter in callback")
                 call.respond(HttpStatusCode.BadRequest, "Missing code")
+                return@get
+            }
+
+            // Validate code format (basic security check)
+            if (!code.matches(Regex("^[a-zA-Z0-9/_-]+$"))) {
+                log.error("Invalid code format in callback")
+                call.respond(HttpStatusCode.BadRequest, "Invalid code format")
                 return@get
             }
 

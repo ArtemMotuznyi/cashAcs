@@ -28,6 +28,10 @@ class GmailService {
     private val scopes = listOf(GmailScopes.GMAIL_READONLY)
     private val credentialsPath = System.getenv("CLIENT_SECRET")
         ?: throw IllegalStateException("CLIENT_SECRET not set")
+    
+    // Make redirect URI configurable for server deployment
+    private val redirectUri = System.getenv("OAUTH_REDIRECT_URI") 
+        ?: "http://localhost:8080/oauth2callback"
 
     private fun loadClientSecrets() = FileInputStream(credentialsPath).use { stream ->
         GoogleClientSecrets.load(jsonFactory, InputStreamReader(stream))
@@ -49,7 +53,7 @@ class GmailService {
             .build()
 
         val url = flow.newAuthorizationUrl()
-            .setRedirectUri("http://localhost:8080/oauth2callback")
+            .setRedirectUri(redirectUri)
             // щоб refreshToken був отриманий при першій авторизації
             .setApprovalPrompt("force")
             .build()
@@ -70,7 +74,7 @@ class GmailService {
                 .build()
 
             val tokenResponse = flow.newTokenRequest(code)
-                .setRedirectUri("http://localhost:8080/oauth2callback")
+                .setRedirectUri(redirectUri)
                 .execute()
 
             val credential = flow.createAndStoreCredential(tokenResponse, USER_ID)
