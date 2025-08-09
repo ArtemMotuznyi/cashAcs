@@ -4,6 +4,10 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 group = "ua.developer.artemmotuznyi"
 version = "0.0.1"
 
