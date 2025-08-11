@@ -1,4 +1,4 @@
-package ua.developer.artemmotuznyi
+package ua.developer.artemmotuznyi.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -28,7 +28,7 @@ object DatabaseFactory {
                     validate()
                 }
                 val ds = HikariDataSource(config)
-                Database.connect(ds)
+                Database.Companion.connect(ds)
                 _dataSource = ds
             }
         }

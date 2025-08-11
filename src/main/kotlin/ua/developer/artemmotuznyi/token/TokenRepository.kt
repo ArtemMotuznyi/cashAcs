@@ -1,13 +1,9 @@
-package ua.developer.artemmotuznyi.mailtoken
+package ua.developer.artemmotuznyi.token
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.IColumnType
-import org.jetbrains.exposed.sql.transactions.transaction
-import ua.developer.artemmotuznyi.DatabaseFactory
 import java.io.File
-import java.sql.PreparedStatement
 
 class TokenRepository(private val masterKeyPath: String) {
     private val masterKey: String by lazy {

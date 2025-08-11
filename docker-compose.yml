@@ -19,15 +19,16 @@ services:
     environment:
       DATABASE_USER: ktor_user
       DATABASE_PASSWORD: ktor_password
-      ADMIN_CRED_FILE: /run/secrets/admin_credentials
+      CREDS_FILE: /run/secrets/admin_credentials
       CLIENT_SECRET: /run/secrets/client_secret
-      DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
+      DATABASE_URL: jdbc:postgresql://postgres-ua.developer.artemmotuznyi.db:5432/ktor_db
       MAIL_TOKEN_MASTER_KEY: /run/secrets/master_key
       PORT: 8080
       # Production OAuth redirect URI (should be set to actual server domain)
       OAUTH_REDIRECT_URI: ${OAUTH_REDIRECT_URI:-http://localhost:8080/oauth2callback}
       # Allowed CORS host for production
       ALLOWED_HOST: ${ALLOWED_HOST:-localhost:8080}
+      JWT_SECRET : ${JWT_SECRET:-your_jwt_secret_here}
     ports:
       - "8080:8080"
     # Remove debug port for production security

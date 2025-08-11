@@ -38,7 +38,7 @@ To build or run the project, use one of the following tasks:
 1. **Review security documentation**: See [SECURITY.md](SECURITY.md) for detailed security guide
 2. **Run security check**: `./scripts/security-check.sh`
 3. **Hash admin password**: `./scripts/hash-password.sh username password`
-4. **Production deployment**: `docker-compose up -d app postgres-db`
+4. **Production deployment**: `docker-compose up -d app postgres-ua.developer.artemmotuznyi.db`
 5. **Development with debug**: `docker-compose -f docker-compose.dev.yml up -d`
 
 ### Security Features Implemented

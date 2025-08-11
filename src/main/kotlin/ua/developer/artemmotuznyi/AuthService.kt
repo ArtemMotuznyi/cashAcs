@@ -1,4 +1,4 @@
-package ua.developer.artemmotuznyi.ukrsibparser
+package ua.developer.artemmotuznyi
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.io.File

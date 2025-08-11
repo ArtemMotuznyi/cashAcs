@@ -1,4 +1,4 @@
-package ua.developer.artemmotuznyi.ukrsibparser
+package ua.developer.artemmotuznyi.ukrsib
 
 
 class UrksibCashInfoProvider(

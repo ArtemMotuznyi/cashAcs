@@ -1,4 +1,4 @@
-package ua.developer.artemmotuznyi.mailtoken
+package ua.developer.artemmotuznyi.token
 
 import kotlinx.serialization.Serializable
 

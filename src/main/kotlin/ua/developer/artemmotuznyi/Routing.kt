@@ -3,10 +3,10 @@ package ua.developer.artemmotuznyi
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
+import io.ktor.server.plugins.ratelimit.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.plugins.ratelimit.*
 import kotlinx.html.body
 import kotlinx.html.h1
 import kotlinx.html.li
@@ -15,9 +15,8 @@ import org.slf4j.LoggerFactory
 import ua.developer.artemmotuznyi.responce.CashValue
 import ua.developer.artemmotuznyi.responce.CashValueResponse
 import ua.developer.artemmotuznyi.ui.generateAuthFormHtml
-import ua.developer.artemmotuznyi.ukrsibparser.AuthService
-import ua.developer.artemmotuznyi.ukrsibparser.GmailService
-import ua.developer.artemmotuznyi.ukrsibparser.UrksibCashInfoProvider
+import ua.developer.artemmotuznyi.ukrsib.GmailService
+import ua.developer.artemmotuznyi.ukrsib.UrksibCashInfoProvider
 
 fun Application.configureRouting() {
     val log = LoggerFactory.getLogger("Routing")
@@ -45,14 +44,14 @@ fun Application.configureRouting() {
                 val params = call.receiveParameters()
                 val username = params["username"]?.trim()?.take(100) // Limit length and sanitize
                 val password = params["password"]?.take(100) // Limit length
-                
+
                 // Input validation
                 if (username.isNullOrBlank() || password.isNullOrBlank()) {
                     log.warn("Missing username or password")
                     call.respondRedirect("/auth?error=invalid")
                     return@post
                 }
-                
+
                 // Sanitize username for logging (remove potential injection)
                 val safeUsername = username.replace(Regex("[^a-zA-Z0-9_.-]"), "_")
                 log.debug("Received credentials username='{}'", safeUsername)
@@ -98,7 +97,7 @@ fun Application.configureRouting() {
         get("/emails") {
             log.info("GET /emails")
             if (!gmailService.hasValidToken()) {
-                log.info("No valid token, redirecting to /auth")
+                log.info("No valid ua.developer.artemmotuznyi.token, redirecting to /auth")
                 call.respondRedirect("/auth")
                 return@get
             }
@@ -126,7 +125,7 @@ fun Application.configureRouting() {
             log.info("GET /ukrsib-update called")
 
             if (!gmailService.hasValidToken()) {
-                log.warn("Access denied: no valid Gmail token")
+                log.warn("Access denied: no valid Gmail ua.developer.artemmotuznyi.token")
                 call.respond(HttpStatusCode.Forbidden, "Access denied")
                 return@get
             }
@@ -136,7 +135,7 @@ fun Application.configureRouting() {
                 val urkSibValues = urksibCashInfoProvider.getCashInfo()
                 val cashValues = urkSibValues.map { (currency, value) ->
                     CashValue(
-                        provider = "urksib",
+                        provider = "ua/developer/artemmotuznyi/ukrsibeloper/artemmotuznyi/ukrsib",
                         currencyTitle = currency,
                         value = value
                     )
