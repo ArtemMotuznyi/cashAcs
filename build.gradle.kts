@@ -21,6 +21,33 @@ tasks.register<JavaExec>("hashPassword") {
     description = "Hash passwords for API credentials"
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass = "ua.developer.artemmotuznyi.tools.PasswordHasherKt"
+    
+    // Allow passing args
+    doFirst {
+        val userArgs = project.findProperty("args") as String?
+        if (userArgs != null) {
+            args = listOf("hash-password") + userArgs.split(" ")
+        } else {
+            args = listOf("hash-password")
+        }
+    }
+}
+
+// Task to run API security tests
+tasks.register<JavaExec>("testApiSecurity") {
+    group = "security"
+    description = "Test API security components"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.test.ApiSecurityTestKt"
+    args = listOf("test-api")
+}
+
+// Task to test real authentication
+tasks.register<JavaExec>("testRealAuth") {
+    group = "security"
+    description = "Test real API authentication flow"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.test.RealAuthTestKt"
 }
 
 repositories {
