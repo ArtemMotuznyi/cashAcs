@@ -15,6 +15,41 @@ application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
 
+// Task to run the password hasher utility
+tasks.register<JavaExec>("hashPassword") {
+    group = "security"
+    description = "Hash passwords for API credentials"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.tools.PasswordHasherKt"
+    
+    // Allow passing args
+    doFirst {
+        val userArgs = project.findProperty("args") as String?
+        if (userArgs != null) {
+            args = listOf("hash-password") + userArgs.split(" ")
+        } else {
+            args = listOf("hash-password")
+        }
+    }
+}
+
+// Task to run API security tests
+tasks.register<JavaExec>("testApiSecurity") {
+    group = "security"
+    description = "Test API security components"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.test.ApiSecurityTestKt"
+    args = listOf("test-api")
+}
+
+// Task to test real authentication
+tasks.register<JavaExec>("testRealAuth") {
+    group = "security"
+    description = "Test real API authentication flow"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.test.RealAuthTestKt"
+}
+
 repositories {
     mavenCentral()
 }
@@ -41,4 +76,11 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-server-default-headers:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-server-hsts:${libs.versions.ktor.version.get()}")
+    
+    // JWT Authentication for API
+    implementation("io.ktor:ktor-server-auth:${libs.versions.ktor.version.get()}")
+    implementation("io.ktor:ktor-server-auth-jwt:${libs.versions.ktor.version.get()}")
+    
+    // BCrypt for API credentials (already used in AuthService)
+    implementation("org.springframework.security:spring-security-crypto:5.7.2")
 }

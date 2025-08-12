@@ -13,12 +13,18 @@ This document outlines the security measures implemented and required configurat
 - **Configurable redirect URI**: Use `OAUTH_REDIRECT_URI` environment variable for server deployment
 - **Input validation**: OAuth codes are validated for format and length
 
-### 3. Network Security
+### 3. **NEW: JWT API Authentication**
+- **Secure JWT tokens**: HS256 algorithm with configurable expiration (24h access, 7d refresh)
+- **API user management**: Support for 2 hardcoded users with BCrypt-hashed passwords
+- **Rate limiting**: API authentication endpoints limited to 10 attempts per minute per IP
+- **Token refresh**: Automatic token refresh capability for sustained API access
+
+### 4. Network Security
 - **Production Docker**: No debug ports exposed (port 5005 removed)
 - **Security headers**: HSTS, CSP, X-Frame-Options, X-Content-Type-Options
 - **Rate limiting**: Authentication endpoints limited to 5 attempts per minute per IP
 
-### 4. Data Protection
+### 5. Data Protection
 - **Input sanitization**: Username/password length limits and character filtering
 - **Secure logging**: Sensitive data removed from logs
 - **PostgreSQL encryption**: OAuth tokens encrypted using pgcrypto extension
@@ -40,6 +46,10 @@ ALLOWED_HOST=your-domain.com
 ADMIN_CRED_FILE=/run/secrets/admin_credentials
 CLIENT_SECRET=/run/secrets/client_secret
 MAIL_TOKEN_MASTER_KEY=/run/secrets/master_key
+
+# NEW: API Authentication
+API_CREDENTIALS_FILE=/run/secrets/api_credentials
+JWT_SECRET_FILE=/run/secrets/jwt_secret
 ```
 
 ### Secret Files Setup
