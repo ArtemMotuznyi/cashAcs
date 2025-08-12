@@ -87,7 +87,7 @@ class GmailService {
                 expirationTimeMillis = credential.expirationTimeMilliseconds ?: 0L
             )
             tokenRepo.save(USER_ID, dto)
-            logger.info("Saved access ua.developer.artemmotuznyi.token for '{}'", USER_ID)
+            logger.info("Saved access token for '{}'", USER_ID)
             true
         } catch (ex: Exception) {
             logger.error("handleOAuthCallback failed", ex)
@@ -95,7 +95,7 @@ class GmailService {
         }
     }
 
-    /** Чи є дійсний (не прострочений) ua.developer.artemmotuznyi.token */
+    /** Чи є дійсний (не прострочений) token */
     suspend fun hasValidToken(): Boolean = withContext(Dispatchers.IO) {
         val dto = tokenRepo.load(USER_ID)
         return@withContext dto?.let {
@@ -109,7 +109,7 @@ class GmailService {
     suspend fun tryGetEmailsOrThrow(maxResults: Long = 10): List<String> = withContext(Dispatchers.IO) {
         logger.debug("Fetching up to {} emails", maxResults)
         val dto = tokenRepo.load(USER_ID)
-            ?: throw IllegalStateException("No ua.developer.artemmotuznyi.token stored")
+            ?: throw IllegalStateException("No token stored")
 
         // Створюємо credential лише з accessToken
         val credential = GoogleCredential().setAccessToken(dto.token)

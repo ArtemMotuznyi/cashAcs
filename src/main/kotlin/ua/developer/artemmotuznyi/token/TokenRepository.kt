@@ -3,6 +3,7 @@ package ua.developer.artemmotuznyi.token
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import ua.developer.artemmotuznyi.db.DatabaseFactory
 import java.io.File
 
 class TokenRepository(private val masterKeyPath: String) {

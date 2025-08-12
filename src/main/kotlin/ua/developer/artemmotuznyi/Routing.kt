@@ -97,7 +97,7 @@ fun Application.configureRouting() {
         get("/emails") {
             log.info("GET /emails")
             if (!gmailService.hasValidToken()) {
-                log.info("No valid ua.developer.artemmotuznyi.token, redirecting to /auth")
+                log.info("No valid token, redirecting to /auth")
                 call.respondRedirect("/auth")
                 return@get
             }
@@ -125,7 +125,7 @@ fun Application.configureRouting() {
             log.info("GET /ukrsib-update called")
 
             if (!gmailService.hasValidToken()) {
-                log.warn("Access denied: no valid Gmail ua.developer.artemmotuznyi.token")
+                log.warn("Access denied: no valid Gmail token")
                 call.respond(HttpStatusCode.Forbidden, "Access denied")
                 return@get
             }

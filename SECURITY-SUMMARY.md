@@ -65,14 +65,14 @@ The cashAcs application has been thoroughly analyzed and secured for server depl
 - **Token Encryption**: PostgreSQL pgcrypto with symmetric encryption
 - **Password Hashing**: BCrypt with cost factor 12
 - **Key Management**: File-based master key with validation
-- **OAuth Security**: Secure ua.developer.artemmotuznyi.token storage and refresh handling
+- **OAuth Security**: Secure token storage and refresh handling
 
 ## ⚡ Next Steps for Deployment
 
 1. **Setup**: Run `./scripts/security-check.sh` before deployment
 2. **Environment**: Configure production environment variables using `.env.production.template`
 3. **Secrets**: Generate strong master key and hash admin password
-4. **Deploy**: Use `docker-compose up -d app postgres-ua.developer.artemmotuznyi.db` for production
+4. **Deploy**: Use `docker-compose up -d app postgres-db` for production
 5. **Monitor**: Set up logging and security monitoring
 
 The application is now **SECURE AND READY** for server deployment! 🎯✅

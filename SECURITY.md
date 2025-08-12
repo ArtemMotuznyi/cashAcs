@@ -28,7 +28,7 @@ This document outlines the security measures implemented and required configurat
 ### Environment Variables (Required)
 ```bash
 # Database
-DATABASE_URL=jdbc:postgresql://your-ua.developer.artemmotuznyi.db-host:5432/ktor_db
+DATABASE_URL=jdbc:postgresql://your-db-host:5432/ktor_db
 DATABASE_USER=your_secure_user
 DATABASE_PASSWORD=your_strong_password
 
@@ -74,7 +74,7 @@ java -cp build/libs/cashacs-all.jar -Dexec.mainClass="kotlin.script.templates.Sc
 ### Production Deployment Commands
 ```bash
 # Production deployment (no debug ports, no pgAdmin)
-docker-compose up -d app postgres-ua.developer.artemmotuznyi.db
+docker-compose up -d app postgres-db
 
 # Development with debug tools
 docker-compose -f docker-compose.dev.yml up -d

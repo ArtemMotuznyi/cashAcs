@@ -25,7 +25,7 @@ echo "# Build the application"
 echo "./gradlew build"
 echo
 echo "# Production deployment (secure)"
-echo "docker-compose up -d app postgres-ua.developer.artemmotuznyi.db"
+echo "docker-compose up -d app postgres-db"
 echo
 echo "# Development with debug tools"
 echo "docker-compose -f docker-compose.dev.yml up -d"
@@ -34,7 +34,7 @@ echo
 echo "✅ Security Features Active:"
 echo "- BCrypt password hashing (work factor 12)"
 echo "- Rate limiting (5 auth attempts/minute per IP)"
-echo "- PostgreSQL ua.developer.artemmotuznyi.token encryption with pgcrypto"
+echo "- PostgreSQL token encryption with pgcrypto"
 echo "- Security headers (HSTS, CSP, X-Frame-Options)"
 echo "- Input validation and sanitization"
 echo "- Production Docker without debug ports"

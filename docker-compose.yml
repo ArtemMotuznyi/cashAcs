@@ -21,7 +21,7 @@ services:
       DATABASE_PASSWORD: ktor_password
       CREDS_FILE: /run/secrets/admin_credentials
       CLIENT_SECRET: /run/secrets/client_secret
-      DATABASE_URL: jdbc:postgresql://postgres-ua.developer.artemmotuznyi.db:5432/ktor_db
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/ktor_db
       MAIL_TOKEN_MASTER_KEY: /run/secrets/master_key
       PORT: 8080
       # Production OAuth redirect URI (should be set to actual server domain)
