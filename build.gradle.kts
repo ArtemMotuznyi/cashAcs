@@ -15,6 +15,14 @@ application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
 
+// Task to run the password hasher utility
+tasks.register<JavaExec>("hashPassword") {
+    group = "security"
+    description = "Hash passwords for API credentials"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "ua.developer.artemmotuznyi.tools.PasswordHasherKt"
+}
+
 repositories {
     mavenCentral()
 }
@@ -41,4 +49,11 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-server-default-headers:${libs.versions.ktor.version.get()}")
     implementation("io.ktor:ktor-server-hsts:${libs.versions.ktor.version.get()}")
+    
+    // JWT Authentication for API
+    implementation("io.ktor:ktor-server-auth:${libs.versions.ktor.version.get()}")
+    implementation("io.ktor:ktor-server-auth-jwt:${libs.versions.ktor.version.get()}")
+    
+    // BCrypt for API credentials (already used in AuthService)
+    implementation("org.springframework.security:spring-security-crypto:5.7.2")
 }

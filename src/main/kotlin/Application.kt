@@ -2,6 +2,8 @@ package ua.developer.artemmotuznyi
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
@@ -10,6 +12,7 @@ import io.ktor.server.plugins.ratelimit.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ua.developer.artemmotuznyi.mailtoken.OAuthTokens
+import ua.developer.artemmotuznyi.security.JwtService
 import kotlin.time.Duration.Companion.seconds
 
 fun main(args: Array<String>) {
@@ -17,6 +20,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    
+    val jwtService = JwtService()
 
     // Security configurations
     install(HSTS) {
@@ -48,6 +53,32 @@ fun Application.module() {
             requestKey { call ->
                 call.request.headers["X-Forwarded-For"] 
                     ?: call.request.local.remoteAddress
+            }
+        }
+        
+        // Rate limiting for API authentication
+        register(RateLimitName("api-auth")) {
+            rateLimiter(limit = 10, refillPeriod = 60.seconds)
+            requestKey { call ->
+                call.request.headers["X-Forwarded-For"] 
+                    ?: call.request.local.remoteAddress
+            }
+        }
+    }
+    
+    // JWT Authentication configuration
+    install(Authentication) {
+        jwt("api-jwt") {
+            verifier(jwtService.createVerifier())
+            validate { credential ->
+                val userId = credential.payload.getClaim("user_id").asString()
+                val tokenType = credential.payload.getClaim("token_type").asString() ?: "access"
+                
+                if (!userId.isNullOrBlank() && tokenType == "access") {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
             }
         }
     }
